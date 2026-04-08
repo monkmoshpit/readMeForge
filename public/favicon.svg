@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#020617" />
+      <stop offset="1" stop-color="#0b1220" />
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#bg)" />
+  <rect x="2" y="2" width="44" height="44" rx="10" stroke="#0f172a" stroke-width="2" />
+
+  <!-- RM -->
+  <text
+    x="11"
+    y="28"
+    fill="#e5e7eb"
+    font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    font-size="16"
+    font-weight="800"
+    letter-spacing="0.03em"
+  >
+    RM
+  </text>
+
+  <!-- .f em verde -->
+  <text
+    x="26"
+    y="29"
+    fill="#22c55e"
+    font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    font-size="15"
+    font-weight="700"
+  >
+    .f
+  </text>
+</svg>
