@@ -30,3 +30,4 @@ export interface GeneratorFormData {
 
 export type RepoStatus = 'idle' | 'loading_repo' | 'error_repo';
 export type GenStatus = 'idle' | 'generating' | 'done' | 'error_gen';
+export type ReadmeLocale = 'pt-BR' | 'en' | 'es';

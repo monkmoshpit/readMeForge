@@ -42,6 +42,7 @@
   "githubNotFound": "Repositorio no encontrado.",
   "githubRateLimit": "Límite de la API de GitHub o acceso denegado. Prueba más tarde.",
   "githubError": "Error al contactar con GitHub ({{code}}).",
+  "errRateLimit": "Demasiadas solicitudes. Se ha alcanzado el límite de Groq (Free Tier). Por favor, espera unos segundos e inténtalo de nuevo.",
   "toneTechnical": "Técnico",
   "toneCasual": "Casual",
   "toneRecruiter": "Enfoque reclutador",
@@ -57,5 +58,10 @@
   "tplCliHint": "comandos, flags",
   "tplFullstack": "Full stack",
   "tplFullstackHint": "arquitectura, env",
-  "licenseFallbackAlt": "Licencia"
+  "licenseFallbackAlt": "Licencia",
+  "inlineForgeAvisoTitle": "El fragmento requiere atención",
+  "inlineForgeAvisoBody": "Revisa o edita este contenido:",
+  "autoGenerate": "Generar con IA",
+  "fieldPlaceholder_topics": "Añadir temas",
+  "fieldPlaceholder_extraContext": "Añadir info extra"
 }

@@ -1,7 +1,6 @@
 import Groq from 'groq-sdk';
-import type { ReadmeLocale } from '../readmeLocale';
+import type { ReadmeLocale, GeneratorFormData } from '../types';
 import { buildInstructionBlock } from '../prompts/templates';
-import type { GeneratorFormData } from '../types';
 
 const SYSTEM_PROMPTS: Record<ReadmeLocale, string> = {
   en: [
@@ -45,6 +44,7 @@ function getClient(): Groq {
   return new Groq({
     apiKey: key,
     dangerouslyAllowBrowser: true,
+    maxRetries: 0,
   });
 }
 
@@ -84,4 +84,33 @@ export async function generateReadmeStream(
     const piece = chunk.choices[0]?.delta?.content ?? '';
     if (piece) onChunk(piece);
   }
+}
+
+export async function generateExcerpt(
+  field: string,
+  form: GeneratorFormData,
+  readmeLocale: ReadmeLocale,
+): Promise<string> {
+  const client = getClient();
+  const system = SYSTEM_PROMPTS[readmeLocale];
+  
+  const userPayload = {
+    projectData: form.projectData,
+    projectType: form.projectType,
+    tone: form.tone,
+    extraContext: form.extraContext ?? '',
+  };
+
+  const completion = await client.chat.completions.create({
+    model: 'llama-3.1-8b-instant', // Faster model for small excerpts
+    messages: [
+      { role: 'system', content: system },
+      {
+        role: 'user',
+        content: `Generate a short excerpt for the section "${field}" of this README based on the context provided. Return ONLY the content for this section, no headers, no preamble.\n\nContext:\n${JSON.stringify(userPayload, null, 2)}`,
+      },
+    ],
+  });
+
+  return (completion.choices[0]?.message?.content ?? '').trim();
 }

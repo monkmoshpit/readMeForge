@@ -42,6 +42,7 @@
   "githubNotFound": "Repository not found.",
   "githubRateLimit": "GitHub API rate limit or access denied. Try again later.",
   "githubError": "GitHub request failed ({{code}}).",
+  "errRateLimit": "Too many requests. Groq Rate Limit (Free Tier) reached. Please wait a few seconds and try again.",
   "toneTechnical": "Technical",
   "toneCasual": "Casual",
   "toneRecruiter": "Recruiter-focused",
@@ -57,5 +58,10 @@
   "tplCliHint": "commands, flags",
   "tplFullstack": "Full stack",
   "tplFullstackHint": "architecture, env",
-  "licenseFallbackAlt": "License"
+  "licenseFallbackAlt": "License",
+  "inlineForgeAvisoTitle": "Excerpt requires attention",
+  "inlineForgeAvisoBody": "Review or edit this content:",
+  "autoGenerate": "Auto Generate",
+  "fieldPlaceholder_topics": "Add topics",
+  "fieldPlaceholder_extraContext": "Add extra info"
 }

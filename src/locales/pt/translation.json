@@ -41,7 +41,8 @@
   "githubInvalidUrl": "URL do GitHub inválida. Use o formato https://github.com/dono/repo",
   "githubNotFound": "Repositório não encontrado.",
   "githubRateLimit": "Limite da API do GitHub atingido ou acesso negado. Tente mais tarde.",
-  "githubError": "Erro ao falar com o GitHub ({{code}}).",
+  "githubError": "GitHub request failed ({{code}}).",
+  "errRateLimit": "Muitas requisições. O limite do Groq (Free Tier) foi atingido. Aguarde alguns segundos e tente gerar novamente.",
   "toneTechnical": "Técnico",
   "toneCasual": "Casual",
   "toneRecruiter": "Recrutador",
@@ -57,5 +58,8 @@
   "tplCliHint": "comandos, flags",
   "tplFullstack": "Full stack",
   "tplFullstackHint": "arquitetura, env",
-  "licenseFallbackAlt": "Licença"
+  "licenseFallbackAlt": "Licença",
+  "autoGenerate": "Gerar com IA",
+  "fieldPlaceholder_topics": "Adicionar tópicos",
+  "fieldPlaceholder_extraContext": "Adicionar informações extras"
 }

@@ -53,13 +53,28 @@ function injectSlugIntoPaths(text: string, owner: string, repo: string): string 
 }
 
 /**
- * Badge/link de licença com placeholder — mostrar vermelho e levar ao formulário.
+ * Badge/link/URL com placeholder/TODO — mostrar vermelho no preview.
  */
-export function isLicenseUrlWithTodo(url: string): boolean {
+export function isPlaceholderUrl(url: string): boolean {
   if (!url) return false;
   const lower = url.toLowerCase();
-  if (!lower.includes('license')) return false;
-  return /(to\s*do|to%20do|to\+do)/i.test(url);
+  // Se contiver license + todo, ou apenas padrões óbvios de placeholder
+  return (
+    lower.includes('license') && /(to\s*do|to%20do|to\+do)/i.test(url)
+  ) || /(to\s*do|fake|placeholder|a\s+fazer|link\s+da\s+licença|tipo\s+de\s+licença|badge|status|url)/i.test(lower);
+}
+
+/**
+ * Texto que parece ser um placeholder ou aviso técnico que não deveria estar no README final.
+ */
+export function isPlaceholderText(text: string): boolean {
+  if (!text) return false;
+  const lower = text.toLowerCase();
+  return (
+    lower.includes('readme_forge_aviso') ||
+    /\[(to\s*do|a\s*fazer|placeholder)\]/i.test(lower) ||
+    /\b(tipo\s+de\s+licença|informações\s+adicionais|licença|license|status|badge|link|url)\b/i.test(lower.trim())
+  );
 }
 
 const LEGACY_PLACEHOLDER_LINE =
@@ -92,9 +107,9 @@ export function prepareReadmePreviewMarkdown(
   s = s.replace(/§§PH(\d+)§§/g, (_, id) => saved[Number(id)] ?? '');
   s = s.replace(BRACKET_PLACEHOLDER_RE, LEGACY_PLACEHOLDER_LINE);
 
-  // Nunca deixar linhas técnicas README_FORGE_AVISO vazarem cruas no preview,
-  // mesmo com espaçamento irregular.
-  s = s.replace(/^\s*README_FORGE_AVISO:[^:\s]+:\s*.*$/gm, '');
+  // Nunca deixar linhas técnicas README_FORGE_AVISO vazarem cruas no preview — 
+  // agora elas serão capturadas como alertas interativos no ReadmePreview.
+  // s = s.replace(/^\s*README_FORGE_AVISO:[^:]+:\s*.*$/gm, '');
 
   return s;
 }

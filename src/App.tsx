@@ -1,15 +1,15 @@
-import { useCallback, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CollapsibleSection } from './components/CollapsibleSection';
 import { GithubInput } from './components/GithubInput';
 import { GenerateButton } from './components/GenerateButton';
 import { ExtraContextField, ProjectGithubFields } from './components/ProjectForm';
 import { ReadmeLanguageSlider } from './components/ReadmeLanguageSlider';
-import { ReadmePreview } from './components/ReadmePreview';
 import { TemplateSelector } from './components/TemplateSelector';
 import { ToneSelector } from './components/ToneSelector';
+import { PreviewContent } from './components/PreviewContent';
 import { useReadmeGenerator } from './hooks/useReadmeGenerator';
-import type { ReadmeLocale } from './readmeLocale';
+import type { ReadmeLocale } from './types';
 
 export default function App() {
   const { t } = useTranslation();
@@ -31,6 +31,23 @@ export default function App() {
     loadFromGithub,
     generate,
   } = useReadmeGenerator();
+
+  const [atBottom, setAtBottom] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setAtBottom(window.scrollY > 200);
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const togglePageScroll = () => {
+    window.scrollTo({
+      top: atBottom ? 0 : document.body.scrollHeight,
+      behavior: 'smooth',
+    });
+  };
 
   const busy = repoStatus === 'loading_repo' || genStatus === 'generating';
 
@@ -58,6 +75,7 @@ export default function App() {
       errLoadRepo: t('errLoadRepo'),
       errGenerate: t('errGenerate'),
       errEnvKey: t('errEnvKey'),
+      errRateLimit: t('errRateLimit'),
     }),
     [t],
   );
@@ -100,38 +118,6 @@ export default function App() {
     a.click();
     URL.revokeObjectURL(url);
   }, [activeReadme]);
-
-  let previewBody: ReactNode;
-  if (!hasAnyReadme && genStatus !== 'generating') {
-    previewBody = (
-      <p className="text-[15px] leading-relaxed text-zinc-400 sm:text-sm sm:text-zinc-500">{t('previewEmpty')}</p>
-    );
-  } else if (genStatus === 'generating' && !activeReadme) {
-    previewBody = (
-      <p className="text-[15px] leading-relaxed text-zinc-400 sm:text-sm sm:text-zinc-500">
-        {t('previewGeneratingThisLocale')}
-      </p>
-    );
-  } else if (activeReadme) {
-    previewBody = (
-      <ReadmePreview
-        markdown={activeReadme}
-        placeholderToast={t('placeholderToast')}
-        licensePlaceholderToast={t('licensePlaceholderToast')}
-        githubOwner={formData.projectData.githubOwner}
-        githubRepo={formData.projectData.githubRepo}
-        onUpdateMarkdown={onUpdateActiveReadme}
-      />
-    );
-  } else if (hasAnyReadme) {
-    previewBody = (
-      <p className="text-[15px] leading-relaxed text-amber-200/90 sm:text-sm">{t('previewMissingThisLocale')}</p>
-    );
-  } else {
-    previewBody = (
-      <p className="text-[15px] leading-relaxed text-zinc-400 sm:text-sm sm:text-zinc-500">{t('previewEmpty')}</p>
-    );
-  }
 
   return (
     <div className="relative min-h-screen text-slate-100">
@@ -208,10 +194,37 @@ export default function App() {
                 disabled={repoStatus === 'loading_repo'}
               />
             </div>
-            {previewBody}
+            <PreviewContent
+              hasAnyReadme={hasAnyReadme}
+              genStatus={genStatus}
+              activeReadme={activeReadme}
+              formData={formData}
+              readmeLocale={readmeLocale}
+              onUpdateActiveReadme={onUpdateActiveReadme}
+            />
           </section>
         </div>
       </div>
+      {/* Global Scroll Toggle */}
+      <button
+        type="button"
+        onClick={togglePageScroll}
+        className="group fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-50 flex h-9 w-9 items-center justify-center rounded-full border border-zinc-700/60 bg-zinc-900/90 text-zinc-300 shadow-lg backdrop-blur-md transition-all hover:bg-zinc-800 hover:text-white sm:h-10 sm:w-10 sm:bottom-6 sm:right-6"
+        aria-label="Scroll Toggle"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className={`h-5 w-5 transition-transform duration-500 ease-out sm:h-6 sm:w-6 ${
+            atBottom ? 'rotate-180' : 'rotate-0'
+          }`}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+        </svg>
+      </button>
     </div>
   );
 }

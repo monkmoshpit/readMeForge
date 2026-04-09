@@ -2,7 +2,7 @@ import type { ReadmeFieldKey } from './readmePlaceholders';
 import { README_FIELD_KEYS } from './readmePlaceholders';
 
 export const FORGE_WARN_LINE =
-  /^README_FORGE_AVISO:([^:\s]+):\s*(.+?)\s*$/;
+  /^README_FORGE_AVISO:([^:]+):\s*(.+?)\s*$/;
 
 export type ReadmeSegment =
   | { type: 'markdown'; content: string }
