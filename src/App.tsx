@@ -14,6 +14,7 @@ import type { ReadmeLocale } from './readmeLocale';
 export default function App() {
   const { t } = useTranslation();
   const [readmeLocale, setReadmeLocale] = useState<ReadmeLocale>('pt-BR');
+  const [editedReadmes, setEditedReadmes] = useState<Partial<Record<ReadmeLocale, string>>>({});
 
   const {
     formData,
@@ -33,9 +34,14 @@ export default function App() {
 
   const busy = repoStatus === 'loading_repo' || genStatus === 'generating';
 
-  const activeReadme =
+  const originalActiveReadme =
     readmeLocale === 'en' ? readmeEn : readmeLocale === 'es' ? readmeEs : readmePt;
+  const activeReadme = editedReadmes[readmeLocale] ?? originalActiveReadme;
   const hasAnyReadme = readmePt.length > 0 || readmeEn.length > 0 || readmeEs.length > 0;
+
+  const onUpdateActiveReadme = useCallback((next: string) => {
+    setEditedReadmes((prev) => ({ ...prev, [readmeLocale]: next }));
+  }, [readmeLocale]);
 
   const githubMessages = useMemo(
     () => ({
@@ -114,6 +120,7 @@ export default function App() {
         licensePlaceholderToast={t('licensePlaceholderToast')}
         githubOwner={formData.projectData.githubOwner}
         githubRepo={formData.projectData.githubRepo}
+        onUpdateMarkdown={onUpdateActiveReadme}
       />
     );
   } else if (hasAnyReadme) {

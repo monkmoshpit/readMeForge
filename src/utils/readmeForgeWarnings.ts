@@ -2,7 +2,7 @@ import type { ReadmeFieldKey } from './readmePlaceholders';
 import { README_FIELD_KEYS } from './readmePlaceholders';
 
 export const FORGE_WARN_LINE =
-  /^README_FORGE_AVISO:([a-zA-Z]+):(.+)$/;
+  /^README_FORGE_AVISO:([^:\s]+):\s*(.+?)\s*$/;
 
 export type ReadmeSegment =
   | { type: 'markdown'; content: string }
@@ -34,11 +34,15 @@ export function splitMarkdownWithForgeWarnings(markdown: string): ReadmeSegment[
     const trimmed = line.trim();
     const m = FORGE_WARN_LINE.exec(trimmed);
     if (m) {
+      const message = (m[2] ?? '').trim();
+      if (!message) {
+        continue;
+      }
       flush();
       segments.push({
         type: 'warning',
         field: normalizeWarnField(m[1] ?? ''),
-        message: (m[2] ?? '').trim(),
+        message,
       });
     } else {
       buf.push(line);

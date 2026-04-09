@@ -92,10 +92,9 @@ export function prepareReadmePreviewMarkdown(
   s = s.replace(/§§PH(\d+)§§/g, (_, id) => saved[Number(id)] ?? '');
   s = s.replace(BRACKET_PLACEHOLDER_RE, LEGACY_PLACEHOLDER_LINE);
 
-  // Garante que linhas técnicas README_FORGE_AVISO sem mensagem
-  // (ex.: "README_FORGE_AVISO:topics:" ou "README_FORGE_AVISO:extraContext:")
-  // nunca apareçam cruas no preview.
-  s = s.replace(/^README_FORGE_AVISO:[a-zA-Z]+:\s*$/gm, '');
+  // Nunca deixar linhas técnicas README_FORGE_AVISO vazarem cruas no preview,
+  // mesmo com espaçamento irregular.
+  s = s.replace(/^\s*README_FORGE_AVISO:[^:\s]+:\s*.*$/gm, '');
 
   return s;
 }
