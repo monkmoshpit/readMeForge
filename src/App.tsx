@@ -9,6 +9,8 @@ import { TemplateSelector } from './components/TemplateSelector';
 import { ToneSelector } from './components/ToneSelector';
 import { PreviewContent } from './components/PreviewContent';
 import { useReadmeGenerator } from './hooks/useReadmeGenerator';
+import { useGroqKey } from './hooks/useGroqKey';
+import { GroqConfig } from './components/GroqConfig';
 import type { ReadmeLocale } from './types';
 
 export default function App() {
@@ -31,6 +33,8 @@ export default function App() {
     loadFromGithub,
     generate,
   } = useReadmeGenerator();
+
+  const { apiKey, saveKey, clearKey } = useGroqKey();
 
   const [atBottom, setAtBottom] = useState(false);
 
@@ -96,8 +100,8 @@ export default function App() {
   );
 
   const onGenerate = useCallback(() => {
-    generate(generateMessages);
-  }, [generate, generateMessages]);
+    generate(generateMessages, apiKey);
+  }, [generate, generateMessages, apiKey]);
 
   const onCopy = useCallback(async () => {
     if (!activeReadme) return;
@@ -133,6 +137,10 @@ export default function App() {
 
         <section className="mb-6 rounded-md border border-zinc-700/50 bg-zinc-900/40 p-4 sm:mb-8 sm:p-5">
           <GithubInput onFetch={onFetch} repoStatus={repoStatus} disabled={busy} />
+        </section>
+
+        <section className="mb-6 sm:mb-8">
+          <GroqConfig apiKey={apiKey} onSave={saveKey} onClear={clearKey} />
         </section>
 
         {errorMessage ? (
@@ -200,6 +208,7 @@ export default function App() {
               activeReadme={activeReadme}
               formData={formData}
               readmeLocale={readmeLocale}
+              apiKey={apiKey}
               onUpdateActiveReadme={onUpdateActiveReadme}
             />
           </section>

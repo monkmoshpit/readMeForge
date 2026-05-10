@@ -23,6 +23,7 @@ type ReadmePreviewProps = {
   onUpdateMarkdown: (next: string) => void;
   formData?: GeneratorFormData;
   readmeLocale?: ReadmeLocale;
+  apiKey: string | null;
 };
 
 const TOAST_MS = 3200;
@@ -35,6 +36,7 @@ export function ReadmePreview({
   onUpdateMarkdown,
   formData,
   readmeLocale,
+  apiKey,
 }: ReadmePreviewProps) {
   const normalizedMarkdown = useMemo(() => markdown.replace(/\r\n/g, '\n'), [markdown]);
   const { t } = useTranslation();
@@ -148,10 +150,14 @@ export function ReadmePreview({
 
   const autoGenerate = async () => {
     if (!activeInlineMeta || !formData || !readmeLocale) return;
+    if (!apiKey) {
+      setToast(t('missingKeyError'));
+      return;
+    }
     setIsGeneratingExcerpt(true);
     try {
       const field = activeInlineMeta.id.includes('aviso') ? activeInlineMeta.excerptText.split(':')[1] || 'content' : 'content';
-      const result = await generateExcerpt(field, formData, readmeLocale);
+      const result = await generateExcerpt(field, formData, readmeLocale, apiKey);
       setInlineAlertDraft(result);
     } catch {
       setToast(t('errGenerate') || 'Error generating');
