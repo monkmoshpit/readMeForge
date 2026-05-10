@@ -9,6 +9,7 @@ type PreviewContentProps = {
   activeReadme?: string;
   formData: GeneratorFormData;
   readmeLocale: ReadmeLocale;
+  apiKey: string | null;
   onUpdateActiveReadme: (next: string) => void;
 };
 
@@ -18,6 +19,7 @@ export function PreviewContent({
   activeReadme,
   formData,
   readmeLocale,
+  apiKey,
   onUpdateActiveReadme,
 }: PreviewContentProps) {
   const { t } = useTranslation();
@@ -49,6 +51,7 @@ export function PreviewContent({
         onUpdateMarkdown={onUpdateActiveReadme}
         formData={formData}
         readmeLocale={readmeLocale}
+        apiKey={apiKey}
       />
     );
   }

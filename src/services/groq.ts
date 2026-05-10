@@ -38,11 +38,10 @@ const CONTEXT_LABEL: Record<ReadmeLocale, string> = {
   es: 'Contexto en JSON:',
 };
 
-function getClient(): Groq {
-  const key = import.meta.env.VITE_GROQ_API_KEY;
-  if (!key) throw new Error('ENV_KEY');
+function getClient(apiKey: string): Groq {
+  if (!apiKey) throw new Error('MISSING_KEY');
   return new Groq({
-    apiKey: key,
+    apiKey: apiKey,
     dangerouslyAllowBrowser: true,
     maxRetries: 0,
   });
@@ -51,9 +50,10 @@ function getClient(): Groq {
 export async function generateReadmeStream(
   form: GeneratorFormData,
   readmeLocale: ReadmeLocale,
+  apiKey: string,
   onChunk: (s: string) => void,
 ): Promise<void> {
-  const client = getClient();
+  const client = getClient(apiKey);
   const instruction = buildInstructionBlock(form.projectType, form.tone, readmeLocale);
 
   const userPayload = {
@@ -90,8 +90,9 @@ export async function generateExcerpt(
   field: string,
   form: GeneratorFormData,
   readmeLocale: ReadmeLocale,
+  apiKey: string,
 ): Promise<string> {
-  const client = getClient();
+  const client = getClient(apiKey);
   const system = SYSTEM_PROMPTS[readmeLocale];
   
   const userPayload = {

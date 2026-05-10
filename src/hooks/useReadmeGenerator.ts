@@ -75,7 +75,11 @@ export function useReadmeGenerator() {
 
   /** Gera PT-BR, EN e ES (atrasos escalonados para reduzir rate limit). */
   const generate = useCallback(
-    async (gen: GenMessages) => {
+    async (gen: GenMessages, apiKey: string | null) => {
+      if (!apiKey) {
+        setErrorMessage(gen.errEnvKey); // We'll update the message later
+        return;
+      }
       setErrorMessage(null);
       setGenStatus('generating');
       setReadmePt('');
@@ -94,7 +98,7 @@ export function useReadmeGenerator() {
       for (let i = 0; i < tasks.length; i++) {
         const { locale, set } = tasks[i]!;
         try {
-          await generateReadmeStream(formData, locale, set);
+          await generateReadmeStream(formData, locale, apiKey, set);
           successCount++;
           // Small safety buffer between requests
           if (i < tasks.length - 1) {
@@ -104,7 +108,7 @@ export function useReadmeGenerator() {
           lastError = e;
           // If we hit a rate limit or env key error, stop subsequent requests
           const msg = e instanceof Error ? e.message : String(e ?? '');
-          if (msg === 'ENV_KEY' || msg.includes('429')) {
+          if (msg === 'MISSING_KEY' || msg.includes('429')) {
             break;
           }
         }
@@ -113,7 +117,7 @@ export function useReadmeGenerator() {
       if (successCount === 0 && lastError) {
         setGenStatus('error_gen');
         const msg = lastError instanceof Error ? lastError.message : String(lastError ?? '');
-        if (msg === 'ENV_KEY') {
+        if (msg === 'MISSING_KEY') {
           setErrorMessage(gen.errEnvKey);
         } else if (msg.includes('429')) {
           setErrorMessage(gen.errRateLimit ?? 'Rate limit exceeded. Please wait a few seconds.');
