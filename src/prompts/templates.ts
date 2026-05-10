@@ -1,5 +1,4 @@
-import type { ReadmeLocale } from '../readmeLocale';
-import type { ProjectType, Tone } from '../types';
+import type { ReadmeLocale, ProjectType, Tone } from '../types';
 
 const SECTIONS_PT: Record<ProjectType, string> = {
   opensource:

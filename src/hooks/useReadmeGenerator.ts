@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { fetchProjectData, type GithubMessages } from '../services/github';
 import { generateReadmeStream } from '../services/groq';
-import type { GenStatus, GeneratorFormData, ProjectData, ProjectType, RepoStatus, Tone, ReadmeLocale } from '../types';
+import type { GenStatus, GeneratorFormData, ProjectData, ProjectType, RepoStatus, Tone } from '../types';
 
 const emptyProject = (): ProjectData => ({
   name: '',

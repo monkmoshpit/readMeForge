@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { ReadmeLocale } from '../readmeLocale';
+import type { ReadmeLocale } from '../types';
 
 type Props = {
   value: ReadmeLocale;

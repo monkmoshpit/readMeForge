@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReadmePreview } from './ReadmePreview';
 import type { GeneratorFormData, ReadmeLocale } from '../types';
